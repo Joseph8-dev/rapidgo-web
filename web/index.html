@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://goevent.work; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://goevent.work https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Rapidito Monumental — pedidos desde tu asiento. Conexión Monumental.">
+  <meta name="theme-color" content="#041941">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Rapidito Monumental">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+
+  <title>Rapidito Monumental</title>
+
+  <style>
+    html, body { margin: 0; height: 100%; background: #041941; }
+    #loading {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #99E0FF; transition: opacity .3s ease;
+    }
+    #loading img { width: 160px; height: auto; }
+    #loading p { margin: 0; font-size: 13px; letter-spacing: .04em; opacity: .8; }
+  </style>
+</head>
+<body>
+  <div id="loading" aria-live="polite">
+    <img src="splash.png" alt="RapidGo">
+    <p>Cargando…</p>
+  </div>
+  <script src="loader.js"></script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

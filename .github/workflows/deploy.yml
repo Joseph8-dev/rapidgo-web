@@ -1,0 +1,70 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - run: flutter test
+
+      - name: Build
+        env:
+          BASE_HREF: ${{ vars.BASE_HREF }}
+        run: |
+          flutter build web --release --no-web-resources-cdn \
+            --base-href "${BASE_HREF:-/${{ github.event.repository.name }}/}"
+
+      - name: Verify bundle
+        working-directory: build/web
+        run: |
+          fail=0
+          if [ ! -d canvaskit ]; then
+            echo "::error::CanvasKit not bundled locally"; fail=1
+          fi
+          if find . -name '*.map' | grep -q . ; then
+            echo "::error::Source maps found in bundle"; fail=1
+          fi
+          if find . \( -name '.env*' -o -name '*.jks' -o -name '*.keystore' -o -name '*.pem' \) | grep -q . ; then
+            echo "::error::Sensitive file found in bundle"; fail=1
+          fi
+          exit $fail
+
+      - run: touch build/web/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
